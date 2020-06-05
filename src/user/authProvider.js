@@ -1,8 +1,9 @@
-import { AuthProvider } from 'ra-core';
+// import { AuthProvider } from 'react-admin';
 
 const AuthProvider = {
   login: async ({ username, password }) => {
-    const request = new Request("https://mydomain.com/authenticate", {
+    console.log("login", JSON.stringify({ username, password }));
+    const request = new Request("http://localhost:8080/auth/signin", {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: new Headers({ "Content-Type": "application/json" }),
@@ -11,8 +12,8 @@ const AuthProvider = {
     if (response.status < 200 || response.status >= 300) {
       throw new Error(response.statusText);
     }
-    const { token } = await response.json();
-    localStorage.setItem("token", token);
+    const { accessToken } = await response.json();
+    localStorage.setItem("token", accessToken);
 
     //set custom headers 
     //headers.set('Authorization', `Bearer ${token}`);

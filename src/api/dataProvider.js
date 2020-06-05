@@ -1,4 +1,4 @@
-import { stringify } from "query-string";
+// import { stringify } from "query-string";
 import {
   fetchUtils,
   GET_LIST,
@@ -36,7 +36,7 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
     switch (type) {
       case GET_LIST: {
         const { page, perPage } = params.pagination;
-        url = `${apiUrl}/${resource}?page=${page}&pageSize=${perPage}`;
+        url = `${apiUrl}/${resource}/${page}/${perPage}`;
         break;
       }
       case GET_ONE:
@@ -93,8 +93,9 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
             "The numberOfElements property must be must be present in the Json response"
           );
         }
+
         return {
-          data: json.content,
+          data: json[resource + 's'],
           total: parseInt(json.totalElements, 10)
         };
       case CREATE:
