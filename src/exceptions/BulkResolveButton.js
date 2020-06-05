@@ -10,7 +10,7 @@ import {
     CRUD_UPDATE_MANY,
 } from 'react-admin';
 
-const BulkAcceptButton = ({ selectedIds }) => {
+const BulkResolveButton = ({ selectedIds }) => {
     const notify = useNotify();
     const redirectTo = useRedirect();
     const unselectAll = useUnselectAll('exceptions');
