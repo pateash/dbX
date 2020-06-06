@@ -10,7 +10,9 @@ const AuthProvider = {
     });
     const response = await fetch(request);
     if (response.status < 200 || response.status >= 300) {
-      throw new Error(response.statusText);
+      const text = await response.text();
+      console.log(text);
+      throw { error: JSON.parse(text), status: response.status };
     }
     const { accessToken } = await response.json();
     localStorage.setItem("token", accessToken);

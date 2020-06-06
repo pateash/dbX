@@ -33,18 +33,203 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+
+const doRegister = async ({ username, password, name, orgUnit }) => {
+    console.log("login", JSON.stringify({ username, password, name, orgUnit }));
+    const request = new Request("http://localhost:8080/auth/signup", {
+        method: "POST",
+        body: JSON.stringify({ username, password, name, orgUnit }),
+        headers: new Headers({ "Content-Type": "application/json" }),
+    });
+    const response = await fetch(request);
+    if (response.status < 200 || response.status >= 300) {
+        throw new Error(response.statusText);
+    }
+
+    Promise.resolve();
+}
+
 const Login = () => {
-    const [email, setEmail] = useState('');
+    const [isLogin, setIsLogin] = useState(true);
+    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const login = useLogin();
+    const [orgUnit, setOrgUnit] = useState('');
+    const doLogin = useLogin();
     const notify = useNotify();
     const submit = (e) => {
         e.preventDefault();
-        login({ username: email, password })
-            .catch(() => notify('Invalid email or password'));
+        doLogin({ username, password })
+            .catch(({error, status}) => {
+                var msg = '';
+                if (status === 400 || status === 401) {
+                    msg = 'Invalid Password';
+                } else {
+                    msg = error.message;
+                }
+                console.log('login err', error);
+                console.log(msg);
+                notify(msg);
+            });
     };
 
+    const submitRegister = (e) => {
+        e.preventDefault();
+        doRegister({ username, password, name, orgUnit })
+            .then(() => {
+                setIsLogin(true);
+                setName('');
+                setUsername('');
+                setPassword('');
+                setOrgUnit('');
+                notify('Registraion successful')
+            })
+            .catch(() => notify('Username already taken'));
+    }
+
     const classes = useStyles();
+
+    const login = <form className={classes.form} onSubmit={submit} noValidate>
+        <TextField
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
+        />
+        <TextField
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+        />
+        <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+        >
+            Sign In
+</Button>
+        <Grid container>
+            <Grid item xs>
+                <Link href="#" variant="body2">
+                    Forgot password?
+</Link>
+            </Grid>
+            <Grid item>
+                <Link href="" onClick={(e) => {
+                    e.preventDefault();
+                    setIsLogin(false);
+                    setName('');
+                    setUsername('');
+                    setPassword('');
+                    setOrgUnit('');
+                }} variant="text">
+                    {"Don't have an account? Sign Up"}
+                </Link>
+            </Grid>
+        </Grid>
+    </form>;
+
+    const register = <form className={classes.form} onSubmit={submitRegister} noValidate>
+        <Grid container spacing={2}>
+            <Grid item xs={12}>
+                <TextField
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="username"
+                    label="User Name"
+                    name="username"
+                    autoComplete="username"
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <TextField
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    autoComplete="name"
+                    name="name"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="name"
+                    label="Name"
+                    autoFocus
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <TextField
+                    value={orgUnit}
+                    onChange={e => setOrgUnit(e.target.value)}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="org_unit"
+                    label="Organization Unit"
+                    name="org_unit"
+                    autoComplete="org_unit"
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <TextField
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                />
+            </Grid>
+        </Grid>
+        <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+        >
+            Sign Up
+    </Button>
+        <Grid container justify="flex-end">
+            <Grid item>
+                <Link href="" onClick={(e) => {
+                    e.preventDefault();
+                    setIsLogin(true);
+                    setName('');
+                    setUsername('');
+                    setPassword('');
+                    setOrgUnit('');
+                }} variant="text">
+                    Already have an account? Log in
+                </Link>
+                <Link href="#" variant="body2">
+                </Link>
+            </Grid>
+        </Grid>
+    </form>
+
 
     return (
         <Container component="main" maxWidth="xs">
@@ -54,57 +239,9 @@ const Login = () => {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign in
-          </Typography>
-                <form className={classes.form} onSubmit={submit} noValidate>
-                    <TextField
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                    />
-                    <TextField
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Sign In
-            </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
-                </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
+                    {isLogin ? "Signin" : "Signup"}
+                </Typography>
+                {isLogin ? login : register}
                 <Notification />
             </div>
         </Container>

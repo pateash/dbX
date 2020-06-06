@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useRedirect, useNotify, Notification } from 'react-admin';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,8 +35,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const register = async ({ username, password, name, orgUnit }) => {
+  console.log("login", JSON.stringify({ username, password, name, orgUnit }));
+  const request = new Request("http://localhost:8080/auth/signup", {
+    method: "POST",
+    body: JSON.stringify({ username, password }),
+    headers: new Headers({ "Content-Type": "application/json" }),
+  });
+  const response = await fetch(request);
+  if (response.status < 200 || response.status >= 300) {
+    throw new Error(response.statusText);
+  }
+
+  Promise.resolve();
+}
+
 export default function Signup() {
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [orgUnit, setOrgUnit] = useState('');
+  const redirect = useRedirect();
+  const notify = useNotify();
   const classes = useStyles();
+
+  const submit = (e) => {
+    e.preventDefault();
+    register()
+      .then(() => {
+        redirect('/login');
+      })
+      .catch(() => notify('Username already taken!'));
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -48,8 +80,23 @@ export default function Signup() {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                variant="outlined"
+                required
+                fullWidth
+                id="username"
+                label="User Name"
+                name="username"
+                autoComplete="username"
+              />
+            </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                value={name}
+                onChange={e => setName(e.target.value)}
                 autoComplete="name"
                 name="name"
                 variant="outlined"
@@ -62,6 +109,8 @@ export default function Signup() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                value={orgUnit}
+                onChange={e => setOrgUnit(e.target.value)}
                 variant="outlined"
                 required
                 fullWidth
@@ -73,17 +122,8 @@ export default function Signup() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 variant="outlined"
                 required
                 fullWidth
@@ -112,10 +152,8 @@ export default function Signup() {
             </Grid>
           </Grid>
         </form>
+        <Notification />
       </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
