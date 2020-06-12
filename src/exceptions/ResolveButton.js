@@ -23,7 +23,7 @@ const ResolveButton = ({ record }) => {
           {},
           true
         );
-        redirectTo("/exceptions");
+        redirectTo("/exception");
       },
       onFailure: () => {
         notify("resources.exceptions.notification.approved_error");
@@ -33,17 +33,13 @@ const ResolveButton = ({ record }) => {
 
   return record && record.status === "unresolved" ? (
     <Button
-      variant="outlined"
-      color="primary"
-      size="small"
+      backgroundColor="green"
       onClick={approve}
       disabled={loading}
+      variant="contained"
+      size="large"
     >
-      <ThumbUp
-        color="primary"
-        style={{ paddingRight: "0.5em", color: "green" }}
-      />
-      {translate("resources.exceptions.action.resolve")}
+      Resolve
     </Button>
   ) : (
     <span />

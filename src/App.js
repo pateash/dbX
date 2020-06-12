@@ -1,5 +1,3 @@
-//import './App.css';
-
 import * as React from "react";
 import { Admin, fetchUtils, ListGuesser, ShowGuesser, EditGuesser, Resource } from 'react-admin';
 import dataProvider from './api/dataProvider';
@@ -12,25 +10,27 @@ import { UserList } from "./userResource/List";
 import EditUser, { UserEdit } from "./userResource/Edit";
 import { OrgUnitCreate } from "./orgUnit/Create";
 import { OrgUnitList } from "./orgUnit/List";
-import { ExceptionList } from "./exceptions/List";
-import { ExceptionEdit } from "./exceptions/Edit";
-import { ExceptionShow } from "./exceptions/Show";
+// import { ExceptionList } from "./exceptions/List";
+// import { ExceptionEdit } from "./exceptions/Edit";
+// import { ExceptionShow } from "./exceptions/Show";
 import { BusinessComponentList } from "./businessComponent/List";
 import { BusinessComponentCreate } from "./businessComponent/Create";
 import { RejectedExceptionEdit } from "./rejectedExceptions/Edit";
 import { RejectedExceptionShow } from "./rejectedExceptions/Show";
 import { RejectedExceptionList } from "./rejectedExceptions/List";
+import ExceptionTable from "./exceptionTable/ExceptionTable"
+import ExceptionEdit from "./exceptionTable/ExceptionEdit";
+// import ExceptionFilter from "./exceptionTable/ExceptionFilter";
 
 const httpClient = (url, options = {}) => {
     console.log("url", url);
     if (!options.headers) {
-        options.headers = new Headers({ Accept: 'application/json' });
+        options.headers = new Headers({ Accept: "application/json" });
     }
-    const token = localStorage.getItem('token');
-    options.headers.set('Authorization', `Bearer ${token}`);
+    const token = localStorage.getItem("token");
+    options.headers.set("Authorization", `Bearer ${token}`);
     return fetchUtils.fetchJson(url, options);
 };
-
 
 /* const ExceptionsList = props => (
     <List {...props}>
@@ -40,15 +40,26 @@ const httpClient = (url, options = {}) => {
             <TextField source="source" />
         </Datagrid>
     </List>
+
+
+
 ); */
 
 const App = () => (
     <Admin title="dbX" loginPage={Login} logoutButton={Logout} authProvider={authProvider} dataProvider={dataProvider('http://localhost:8080/api', httpClient)}>
         {permissions => [
             /* User */
-            permissions === 'ROLE_USER'
+            /* permissions === 'ROLE_USER'
                 ? <Resource icon={PostIcon} name="exception" key="exceptions" options={{ label: 'Exceptions' }} list={ExceptionList} show={ExceptionShow} edit={ExceptionEdit} />
-                : null,
+                : null, */
+
+                permissions === 'ROLE_USER' ? <Resource
+                name="exception"
+                list={ExceptionTable}
+                show={ShowGuesser}
+                edit={ExceptionEdit}
+                //filter={ExceptionFilter}
+              /> : null,
 
             /* Admin */
             /* permissions === 'ROLE_ADMIN'
