@@ -21,6 +21,7 @@ import { RejectedExceptionList } from "./rejectedExceptions/List";
 import ExceptionTable from "./exceptionTable/ExceptionTable"
 import ExceptionEdit from "./exceptionTable/ExceptionEdit";
 import config from "./config";
+import RejectedExceptionTable from "./rejectedExceptionTable/RejectedExceptionTable";
 // import ExceptionFilter from "./exceptionTable/ExceptionFilter";
 
 const httpClient = (url, options = {}) => {
@@ -54,13 +55,14 @@ const App = () => (
                 ? <Resource icon={PostIcon} name="exception" key="exceptions" options={{ label: 'Exceptions' }} list={ExceptionList} show={ExceptionShow} edit={ExceptionEdit} />
                 : null, */
 
-                permissions === 'ROLE_USER' ? <Resource
+            permissions === 'ROLE_USER' ? <Resource
                 name="exception"
                 list={ExceptionTable}
                 show={ShowGuesser}
                 edit={ExceptionEdit}
-                //filter={ExceptionFilter}
-              /> : null,
+                options={{ label: 'Exceptions' }}
+            //filter={ExceptionFilter}
+            /> : null,
 
             /* Admin */
             /* permissions === 'ROLE_ADMIN'
@@ -75,8 +77,15 @@ const App = () => (
                 ? <Resource icon={PostIcon} name="orgUnit" key="orgUnits" options={{ label: 'Org. Units' }} list={OrgUnitList} create={OrgUnitCreate} />
                 : null,
 
+            /* ? <Resource icon={PostIcon} name="rejectedException" key="rejectedExceptions" options={{ label: 'Rejected Exceptions' }} list={RejectedExceptionList} show={RejectedExceptionShow} edit={RejectedExceptionEdit} /> */
             permissions === 'ROLE_ADMIN'
-                ? <Resource icon={PostIcon} name="rejectedException" key="rejectedExceptions" options={{ label: 'Rejected Exceptions' }} list={RejectedExceptionList} show={RejectedExceptionShow} edit={RejectedExceptionEdit} />
+                ? <Resource
+                    options={{ label: 'Rejected Exceptions' }}
+                    name="rejectedException"
+                    list={RejectedExceptionTable}
+                    show={ShowGuesser}
+                //filter={ExceptionFilter}
+                />
                 : null,
 
             <Resource icon={PostIcon} name="businessComponent" key="businessComponents" options={{ label: 'Business Components' }} list={BusinessComponentList} create={BusinessComponentCreate} />,
