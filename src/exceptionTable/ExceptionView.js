@@ -9,12 +9,12 @@ import {
   ChipField,
   EditButton,
   ShowButton,
-  Button,
-  useMutation, useNotify, useRedirect, useRefresh, useUnselectAll, useDeleteMany,
+  Show,
+  SimpleShowLayout,
 } from "react-admin";
-import { Avatar, makeStyles, useTheme, Chip, Typography } from "@material-ui/core";
+import { Avatar, makeStyles, useTheme, Chip } from "@material-ui/core";
 import { green, red, yellow } from "@material-ui/core/colors";
-import ExceptionFilter from "../exceptionTable/ExceptionFilter";
+import ExceptionFilter from "./ExceptionFilter";
 
 //import rowStyle from "./rowStyle";
 
@@ -56,48 +56,12 @@ const useListStyles = makeStyles({
   },
 });
 
-
-const ApproveButton = ({ record }) => {
-  const notify = useNotify();
-  const redirect = useRedirect();
-  const refresh = useRefresh();
-  const [approve, { loading }] = useMutation(
-    {
-      type: 'delete',
-      resource: 'rejectedException',
-      payload: { id: record.id, data: { isApproved: true } },
-    },
-    {
-      undoable: false,
-      onSuccess: ({ data }) => {
-        // redirect('/rejectedException');
-        refresh();
-        notify('approved', 'info', {}, false);
-      },
-      onFailure: (error) => notify(`Error: ${error.message}`, 'warning'),
-    }
-  );
-  return <Button label="Approve" onClick={approve} disabled={loading} />;
-};
-
-const RejectedExceptionTable = ({ selectedRow, ...props }) => {
+const ExceptionView = ({ selectedRow, ...props }) => {
   const classes = useListStyles();
   const theme = useTheme();
   return (
-    <List
-      {...props}
-      filters={<ExceptionFilter />}
-    >
-      <Datagrid
-        rowClick=""
-        classes={{
-          headerRow: classes.headerRow,
-          headerCell: classes.headerCell,
-          rowCell: classes.rowCell,
-        }}
-        optimized
-        {...props}
-      >
+    <Show {...props}>
+    <SimpleShowLayout>
         <DateField label="Time Generated" source="timeGenerated" showTime />
         <TextField source="source" />
         <TextField source="category" />
@@ -132,24 +96,39 @@ const RejectedExceptionTable = ({ selectedRow, ...props }) => {
             />
           </>
         }} />
-        <FunctionField label="Business Component" source="businessComponent" sortBy="businessComponent" render={record => {
-          return <Typography style={{
-            background: record.businessComponent.includes(',-') ? 'red' : null,
-            color: record.businessComponent.includes(',-') ? 'white' : 'black',
-          }}>{record.businessComponent.replace(',-', '')}</Typography>
-        }} />
-        {/* <TextField style={{ color: 'red' }} label="Business Component" source="businessComponent" /> */}
-        <FunctionField label="Org. Unit" source="orgUnit" sortBy="orgUnit" render={record => {
-          return <Typography style={{
-            background: record.orgUnit.includes(',-') ? 'red' : null,
-            color: record.orgUnit.includes(',-') ? 'white' : 'black',
-          }}>{record.orgUnit.replace(',-', '')}</Typography>
-        }} />
+        <TextField label="Business Component" source="businessComponent.name" />
+        <TextField label="Org. Unit" source="orgUnit.name" />
         <RichTextField label="Technical Description" source="technicalDescription" />
-        <ShowButton />
-        <ApproveButton />
-      </Datagrid>
-    </List>
+        <FunctionField label="Status" source="status" sortBy="status" render={record => {
+          var avatarClass;
+          var chipColor;
+          const status = record.status.toLowerCase();
+          switch (status) {
+            case "status_unresolved":
+              avatarClass = classes.redCircle;
+              chipColor = red[500];
+              break;
+            case "status_resolved":
+              avatarClass = classes.greenCircle;
+              chipColor = green[500];
+              break;
+          }
+
+          return <>
+            <Chip
+              variant="outlined"
+              avatar={<Avatar className={avatarClass} variant="circle"> </Avatar>}
+              label={status.split("_")[1].toUpperCase()}
+              style={{
+                color: chipColor,
+              }}
+            />
+          </>
+        }} />
+        <DateField showTime label="Updated Time" source="updateTime" />
+        <TextField source="comment" />
+      </SimpleShowLayout>
+    </Show>
   );
 };
-export default RejectedExceptionTable;
+export default ExceptionView;

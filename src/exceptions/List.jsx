@@ -56,11 +56,6 @@ const QuickFilter = ({ label }) => {
 
 const ExceptionFilter = props => (
     <Filter {...props}>
-        {/* <QuickFilter
-            label="Enabled"
-            source="isEnabled"
-            defaultValue
-        /> */}
         <SelectInput source="severity" choices={[
             { id: 'high', name: 'High' },
             { id: 'medium', name: 'Medium' },

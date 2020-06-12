@@ -15,13 +15,12 @@ import { OrgUnitList } from "./orgUnit/List";
 // import { ExceptionShow } from "./exceptions/Show";
 import { BusinessComponentList } from "./businessComponent/List";
 import { BusinessComponentCreate } from "./businessComponent/Create";
-import { RejectedExceptionEdit } from "./rejectedExceptions/Edit";
-import { RejectedExceptionShow } from "./rejectedExceptions/Show";
-import { RejectedExceptionList } from "./rejectedExceptions/List";
 import ExceptionTable from "./exceptionTable/ExceptionTable"
 import ExceptionEdit from "./exceptionTable/ExceptionEdit";
 import config from "./config";
 import RejectedExceptionTable from "./rejectedExceptionTable/RejectedExceptionTable";
+import ExceptionView from "./exceptionTable/ExceptionView";
+import RejectedExceptionView from "./rejectedExceptionTable/RejectedExceptionView";
 // import ExceptionFilter from "./exceptionTable/ExceptionFilter";
 
 const httpClient = (url, options = {}) => {
@@ -58,7 +57,7 @@ const App = () => (
             permissions === 'ROLE_USER' ? <Resource
                 name="exception"
                 list={ExceptionTable}
-                show={ShowGuesser}
+                show={ExceptionView}
                 edit={ExceptionEdit}
                 options={{ label: 'Exceptions' }}
             //filter={ExceptionFilter}
@@ -83,7 +82,7 @@ const App = () => (
                     options={{ label: 'Rejected Exceptions' }}
                     name="rejectedException"
                     list={RejectedExceptionTable}
-                    show={ShowGuesser}
+                    show={RejectedExceptionView}
                 //filter={ExceptionFilter}
                 />
                 : null,

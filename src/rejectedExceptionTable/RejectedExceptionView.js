@@ -9,8 +9,8 @@ import {
   ChipField,
   EditButton,
   ShowButton,
-  Button,
-  useMutation, useNotify, useRedirect, useRefresh, useUnselectAll, useDeleteMany,
+  Show,
+  SimpleShowLayout,
 } from "react-admin";
 import { Avatar, makeStyles, useTheme, Chip, Typography } from "@material-ui/core";
 import { green, red, yellow } from "@material-ui/core/colors";
@@ -56,48 +56,12 @@ const useListStyles = makeStyles({
   },
 });
 
-
-const ApproveButton = ({ record }) => {
-  const notify = useNotify();
-  const redirect = useRedirect();
-  const refresh = useRefresh();
-  const [approve, { loading }] = useMutation(
-    {
-      type: 'delete',
-      resource: 'rejectedException',
-      payload: { id: record.id, data: { isApproved: true } },
-    },
-    {
-      undoable: false,
-      onSuccess: ({ data }) => {
-        // redirect('/rejectedException');
-        refresh();
-        notify('approved', 'info', {}, false);
-      },
-      onFailure: (error) => notify(`Error: ${error.message}`, 'warning'),
-    }
-  );
-  return <Button label="Approve" onClick={approve} disabled={loading} />;
-};
-
-const RejectedExceptionTable = ({ selectedRow, ...props }) => {
+const RejectedExceptionView = ({ selectedRow, ...props }) => {
   const classes = useListStyles();
   const theme = useTheme();
   return (
-    <List
-      {...props}
-      filters={<ExceptionFilter />}
-    >
-      <Datagrid
-        rowClick=""
-        classes={{
-          headerRow: classes.headerRow,
-          headerCell: classes.headerCell,
-          rowCell: classes.rowCell,
-        }}
-        optimized
-        {...props}
-      >
+    <Show {...props}>
+      <SimpleShowLayout>
         <DateField label="Time Generated" source="timeGenerated" showTime />
         <TextField source="source" />
         <TextField source="category" />
@@ -146,10 +110,8 @@ const RejectedExceptionTable = ({ selectedRow, ...props }) => {
           }}>{record.orgUnit.replace(',-', '')}</Typography>
         }} />
         <RichTextField label="Technical Description" source="technicalDescription" />
-        <ShowButton />
-        <ApproveButton />
-      </Datagrid>
-    </List>
+      </SimpleShowLayout>
+    </Show>
   );
 };
-export default RejectedExceptionTable;
+export default RejectedExceptionView;

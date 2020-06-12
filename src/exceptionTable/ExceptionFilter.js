@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Filter, SearchInput } from "react-admin";
+import { Filter, SelectInput, TextInput } from "react-admin";
 import { Avatar, makeStyles, useTheme, Chip } from "@material-ui/core";
 import { green, red, yellow } from "@material-ui/core/colors";
 
@@ -24,7 +24,7 @@ const useQuickFilterStyles = makeStyles({
   },
 });
 
-const QuickFilter = ({ defaultValue }) => {
+/* const QuickFilter = ({ defaultValue }) => {
   const classes = useQuickFilterStyles();
   switch (defaultValue) {
     case "high":
@@ -62,23 +62,28 @@ const QuickFilter = ({ defaultValue }) => {
       }}
     />
   );
-};
+}; */
 
-const ExceptionFilter = (props) => {
-  return (
-    <Filter {...props}>
-      <SearchInput source="q" alwaysOn />
-      <QuickFilter
-        source="status"
-        label="Unresolved exception"
-        defaultValue={"unresolved"}
-      />
-      <QuickFilter source="status" label="Resolved exception" defaultValue={"resolved"} />
-      <QuickFilter source="status" label="High Severity" defaultValue={"high"} />
-      <QuickFilter source="status" label="Medium Severity" defaultValue={"medium"} />
-      <QuickFilter source="status" label="Low Severity" defaultValue={"low"} />
-    </Filter>
-  );
-};
+
+const ExceptionFilter = props => (
+  <Filter {...props}>
+    <SelectInput source="severity" choices={[
+      { id: 'high', name: 'High' },
+      { id: 'medium', name: 'Medium' },
+      { id: 'low', name: 'Low' },
+    ]} />
+    <SelectInput source="status" choices={[
+      { id: 'resolved', name: 'Resolved' },
+      { id: 'unresolved', name: 'Unresolved' },
+    ]} />
+    <SelectInput source="severityOrder" label="Severity Order" choices={[
+      { id: 'asc', name: 'Low to High' },
+      { id: 'desc', name: 'High to Low' },
+    ]} />
+    <TextInput source="category" />
+    <TextInput source="source" />
+    {/* <BooleanInput label="View Enabled" source="isEnabled" /> */}
+  </Filter>
+);
 
 export default ExceptionFilter;
