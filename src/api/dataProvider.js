@@ -35,12 +35,24 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
     const options = {};
     switch (type) {
       case GET_LIST: {
-        const { page, perPage } = params.pagination;
-        url = `${apiUrl}/${resource}/${page}/${perPage}`;
+        console.log(params);
+        const { filter, pagination, sort } = params;
+        const { page, perPage } = pagination;
+        const { field, order } = sort;
+        var sortStr = '';
+        if (field && field !== null) {
+          sortStr = `&sort=${field}&order=${order}`;
+        }
+        // if (resource === 'user' || resource === 'orgUnit') {
+        url = `${apiUrl}/${resource}?page=${page - 1}&pageSize=${perPage}&filter=${encodeURI(JSON.stringify(filter))}${sortStr !== '' ? sortStr : ''}`;
+        // } else {
+        // url = `${apiUrl}/${resource}/${page}/${perPage}`;
+        // }
         break;
       }
       case GET_ONE:
-        url = `${apiUrl}/${resource}/${params.id}`;
+        url = `${apiUrl}/${resource}/${params.id??'1'}`;
+        options.method = "GET";
         break;
       case GET_MANY: {
         const query = {
@@ -58,7 +70,12 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
       }
       case UPDATE:
         url = `${apiUrl}/${resource}/${params.id}`;
-        options.method = "PUT";
+        options.method = "PATCH";
+        options.body = JSON.stringify(params.data);
+        break;
+      case UPDATE_MANY:
+        url = `${apiUrl}/${resource}`;
+        options.method = "PATCH";
         options.body = JSON.stringify(params.data);
         break;
       case CREATE:
@@ -69,6 +86,7 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
       case DELETE:
         url = `${apiUrl}/${resource}/${params.id}`;
         options.method = "DELETE";
+        console.log('DELETE');
         break;
       default:
         throw new Error(`Unsupported fetch action type ${type}`);

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useState } from 'react';
-import { useLogin, useNotify, Notification } from 'react-admin';
+import { useState, useEffect } from 'react';
+import { useLogin, useNotify, Notification, Loading } from 'react-admin';
 // import { ThemeProvider } from '@material-ui/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 const doRegister = async ({ username, password, name, orgUnit }) => {
-    console.log("login", JSON.stringify({ username, password, name, orgUnit }));
+    console.log("register", JSON.stringify({ username, password, name, orgUnit: Number(orgUnit) }));
     const request = new Request("http://localhost:8080/auth/signup", {
         method: "POST",
         body: JSON.stringify({ username, password, name, orgUnit }),
@@ -50,17 +51,36 @@ const doRegister = async ({ username, password, name, orgUnit }) => {
 }
 
 const Login = () => {
+    useEffect(() => {
+        async function fetchData() {
+            const request = new Request("http://localhost:8080/auth/orgUnit", {
+                method: "GET",
+            });
+            const response = await fetch(request);
+            const res = await response.json();
+            const orgUnits = res;
+
+            console.log('org unit', orgUnits);
+
+            setOrgUnit(orgUnits[0].id)
+            setOrgUnits(orgUnits);
+            setLoading(false);
+        }
+        fetchData();
+    }, []);
+    const [loading, setLoading] = useState(true);
+    const [orgUnits, setOrgUnits] = useState([]);
     const [isLogin, setIsLogin] = useState(true);
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [orgUnit, setOrgUnit] = useState('');
+    const [orgUnit, setOrgUnit] = useState(0);
     const doLogin = useLogin();
     const notify = useNotify();
     const submit = (e) => {
         e.preventDefault();
         doLogin({ username, password })
-            .catch(({error, status}) => {
+            .catch(({ error, status }) => {
                 var msg = '';
                 if (status === 400 || status === 401) {
                     msg = 'Invalid Password';
@@ -88,6 +108,10 @@ const Login = () => {
     }
 
     const classes = useStyles();
+
+    if (loading) {
+        return <Loading />;
+    }
 
     const login = <form className={classes.form} onSubmit={submit} noValidate>
         <TextField
@@ -176,7 +200,20 @@ const Login = () => {
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
-                <TextField
+                <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                    <InputLabel id="demo-simple-select-outlined-label">Org. Unit</InputLabel>
+                    <Select
+                        id="org_unit"
+                        value={orgUnit}
+                        onChange={(e) => setOrgUnit(Number(e.target.value))}
+                        label="Organization Unit"
+                    >
+                        {orgUnits.map(unit => {
+                            return <MenuItem value={unit.id}>{unit.name}</MenuItem>
+                        })}
+                    </Select>
+                </FormControl>
+                {/* <TextField
                     value={orgUnit}
                     onChange={e => setOrgUnit(e.target.value)}
                     variant="outlined"
@@ -186,7 +223,7 @@ const Login = () => {
                     label="Organization Unit"
                     name="org_unit"
                     autoComplete="org_unit"
-                />
+                /> */}
             </Grid>
             <Grid item xs={12}>
                 <TextField

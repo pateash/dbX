@@ -14,8 +14,11 @@ const AuthProvider = {
       console.log(text);
       throw { error: JSON.parse(text), status: response.status };
     }
-    const { accessToken } = await response.json();
-    localStorage.setItem("token", accessToken);
+    const res = await response.json();
+    console.log("auth res", res)
+    const { token, role } = res;
+    localStorage.setItem("token", token);
+    localStorage.setItem("role", role);
 
     //set custom headers 
     //headers.set('Authorization', `Bearer ${token}`);
@@ -23,6 +26,7 @@ const AuthProvider = {
 
   logout: () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     return Promise.resolve();
   },
 
@@ -39,7 +43,11 @@ const AuthProvider = {
     localStorage.getItem("token")
       ? Promise.resolve()
       : Promise.reject({ redirectTo: "/login" }), //no-access
-  getPermissions: () => Promise.reject("Unknown method"),
+
+  getPermissions: () => {
+    const role = localStorage.getItem('role');
+    return role ? Promise.resolve(role) : Promise.reject();
+  }
 
 };
 
