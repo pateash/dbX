@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
+import config from '../config';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const doRegister = async ({ username, password, name, orgUnit }) => {
   console.log("register", JSON.stringify({ username, password, name, orgUnit: Number(orgUnit) }));
-  const request = new Request("http://localhost:8080/auth/signup", {
+  const request = new Request(config.registerUrl, {
     method: "POST",
     body: JSON.stringify({ username, password, name, orgUnit }),
     headers: new Headers({ "Content-Type": "application/json" }),
@@ -52,7 +53,7 @@ const doRegister = async ({ username, password, name, orgUnit }) => {
 const Login = () => {
   useEffect(() => {
     async function fetchData() {
-      const request = new Request("http://localhost:8080/auth/orgUnit", {
+      const request = new Request(config.registerOrgUnitUrl, {
         method: "GET",
       });
       const response = await fetch(request);
@@ -94,6 +95,9 @@ const Login = () => {
 
   const submitRegister = (e) => {
     e.preventDefault();
+
+    alert(orgUnit);
+
     doRegister({ username, password, name, orgUnit })
       .then(() => {
         setIsLogin(true);
@@ -188,6 +192,7 @@ const Login = () => {
           label="User Name"
           name="username"
           autoComplete="username"
+          autoFocus
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -201,7 +206,6 @@ const Login = () => {
           fullWidth
           id="name"
           label="Name"
-          autoFocus
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -268,34 +272,6 @@ const Login = () => {
                 </Link>
         <Link href="#" variant="body2">
         </Link>
-      </Grid>
-    </Grid>
-    <Button
-      type="submit"
-      fullWidth
-      variant="contained"
-      color="primary"
-      className={classes.submit}
-    >
-      Sign Up
-      </Button>
-    <Grid container justify="flex-end">
-      <Grid item>
-        <Link
-          href=""
-          onClick={(e) => {
-            e.preventDefault();
-            setIsLogin(true);
-            setName("");
-            setUsername("");
-            setPassword("");
-            setOrgUnit("");
-          }}
-          variant="text"
-        >
-          Already have an account? Log in
-          </Link>
-        <Link href="#" variant="body2"></Link>
       </Grid>
     </Grid>
   </form>

@@ -20,6 +20,7 @@ import { RejectedExceptionShow } from "./rejectedExceptions/Show";
 import { RejectedExceptionList } from "./rejectedExceptions/List";
 import ExceptionTable from "./exceptionTable/ExceptionTable"
 import ExceptionEdit from "./exceptionTable/ExceptionEdit";
+import config from "./config";
 // import ExceptionFilter from "./exceptionTable/ExceptionFilter";
 
 const httpClient = (url, options = {}) => {
@@ -46,7 +47,7 @@ const httpClient = (url, options = {}) => {
 ); */
 
 const App = () => (
-    <Admin title="dbX" loginPage={Login} logoutButton={Logout} authProvider={authProvider} dataProvider={dataProvider('http://localhost:8080/api', httpClient)}>
+    <Admin title="dbX" loginPage={Login} logoutButton={Logout} authProvider={authProvider} dataProvider={dataProvider(config.apiUrl, httpClient)}>
         {permissions => [
             /* User */
             /* permissions === 'ROLE_USER'
