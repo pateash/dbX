@@ -96,8 +96,6 @@ const Login = () => {
   const submitRegister = (e) => {
     e.preventDefault();
 
-    alert(orgUnit);
-
     doRegister({ username, password, name, orgUnit })
       .then(() => {
         setIsLogin(true);
