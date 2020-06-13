@@ -21,6 +21,7 @@ import config from "./config";
 import RejectedExceptionTable from "./rejectedExceptionTable/RejectedExceptionTable";
 import ExceptionView from "./exceptionTable/ExceptionView";
 import RejectedExceptionView from "./rejectedExceptionTable/RejectedExceptionView";
+import { BusinesscomponentEdit } from "./businessComponent/Edit";
 // import ExceptionFilter from "./exceptionTable/ExceptionFilter";
 
 const httpClient = (url, options = {}) => {
@@ -87,7 +88,15 @@ const App = () => (
                 />
                 : null,
 
-            <Resource icon={PostIcon} name="businessComponent" key="businessComponents" options={{ label: 'Business Components' }} list={BusinessComponentList} create={BusinessComponentCreate} />,
+            <Resource
+                icon={PostIcon}
+                edit={permissions === 'ROLE_ADMIN' ? BusinesscomponentEdit : null}
+                name="businessComponent"
+                key="businessComponents"
+                options={{ label: 'Business Components' }}
+                list={BusinessComponentList}
+                create={permissions === 'ROLE_ADMIN' ? null : BusinessComponentCreate}
+            />,
         ]}
     </Admin>
 );

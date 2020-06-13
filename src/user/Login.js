@@ -210,8 +210,8 @@ const Login = () => {
             onChange={(e) => setOrgUnit(Number(e.target.value))}
             label="Organization Unit"
           >
-            {orgUnits.map(unit => {
-              return <MenuItem value={unit.id}>{unit.name}</MenuItem>
+            {orgUnits.map((unit, idx) => {
+              return <MenuItem value={unit.id}>{idx+1}. {unit.name}</MenuItem>
             })}
           </Select>
         </FormControl>
