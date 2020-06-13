@@ -171,8 +171,8 @@ const ExceptionTable = ({ selectedRow, ...props }) => {
             </>
           }} />
           <TextField label="Business Component" source="businessComponent.name" />
-          <TextField label="Org. Unit" source="orgUnit.name" />
-          <RichTextField label="Technical Description" source="technicalDescription" />
+          {/*<TextField label="Org. Unit" source="orgUnit.name" />*/}
+          {/*<RichTextField label="Technical Description" source="technicalDescription" />*/}
           <FunctionField label="Status" source="status" sortBy="status" render={record => {
             var avatarClass;
             var chipColor;
@@ -199,10 +199,9 @@ const ExceptionTable = ({ selectedRow, ...props }) => {
               />
             </>
           }} />
-          <DateField showTime label="Updated Time" source="updateTime" />
-          <TextField source="comment" />
+          {/*<DateField showTime label="Updated Time" source="updateTime" />*/}
+          {/*<TextField source="comment" />*/}
           <EditButton />
-          <ShowButton />
         </Datagrid>
       </List>
     </div>

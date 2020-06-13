@@ -5,9 +5,7 @@ const ExceptionEdit = (props) => {
   return (
     <Edit {...props}>
       <SimpleForm>
-        <TextInput disabled source="source" />
-        <TextInput disabled source="category" />
-        <TextInput disabled source="description" />
+        <h3>Resolve Exception</h3>
         <SelectInput
           source="status"
           choices={[

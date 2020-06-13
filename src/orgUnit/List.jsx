@@ -6,7 +6,7 @@ import {
 } from 'react-admin';
 
 export const OrgUnitList = props => (
-    <List {...props} click="">
+    <List title="Organization Units" {...props} click="">
         <Datagrid isRowSelectable={() => false} rowClick="">
             <TextField source="name" />
         </Datagrid>

@@ -85,6 +85,7 @@ const RejectedExceptionTable = ({ selectedRow, ...props }) => {
   const theme = useTheme();
   return (
     <List
+    title="Rejected Exceptions"
       {...props}
       filters={<ExceptionFilter />}
     >

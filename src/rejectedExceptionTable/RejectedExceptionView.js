@@ -54,6 +54,11 @@ const useListStyles = makeStyles({
     // width: theme.spacing(3),
     // height: theme.spacing(3),
   },
+
+  inlineField: {
+    display: 'inline-block',
+    width: '50%',
+  }
 });
 
 const RejectedExceptionView = ({ selectedRow, ...props }) => {
@@ -62,10 +67,8 @@ const RejectedExceptionView = ({ selectedRow, ...props }) => {
   return (
     <Show {...props}>
       <SimpleShowLayout>
+      <h3>Rejected Exception Detail</h3>
         <DateField label="Time Generated" source="timeGenerated" showTime />
-        <TextField source="source" />
-        <TextField source="category" />
-        <TextField source="description" />
         <FunctionField label="Severity" source="severity" sortBy="severity" render={record => {
           var avatarClass;
           var chipColor;
@@ -96,20 +99,25 @@ const RejectedExceptionView = ({ selectedRow, ...props }) => {
             />
           </>
         }} />
-        <FunctionField label="Business Component" source="businessComponent" sortBy="businessComponent" render={record => {
+        <TextField source="source" className={classes.inlineField}/>
+        <TextField source="category" className={classes.inlineField}/>
+        
+        <FunctionField label="Org. Unit" source="orgUnit" sortBy="orgUnit" className={classes.inlineField} render={record => {
+          return <Typography style={{
+            background: record.orgUnit.includes(',-') ? 'red' : null,
+            color: record.orgUnit.includes(',-') ? 'white' : 'black',
+          }}>{record.orgUnit.replace(',-', '')}</Typography>
+        }} />
+        <FunctionField label="Business Component" source="businessComponent" sortBy="businessComponent" className={classes.inlineField} render={record => {
           return <Typography style={{
             background: record.businessComponent.includes(',-') ? 'red' : null,
             color: record.businessComponent.includes(',-') ? 'white' : 'black',
           }}>{record.businessComponent.replace(',-', '')}</Typography>
         }} />
         {/* <TextField style={{ color: 'red' }} label="Business Component" source="businessComponent" /> */}
-        <FunctionField label="Org. Unit" source="orgUnit" sortBy="orgUnit" render={record => {
-          return <Typography style={{
-            background: record.orgUnit.includes(',-') ? 'red' : null,
-            color: record.orgUnit.includes(',-') ? 'white' : 'black',
-          }}>{record.orgUnit.replace(',-', '')}</Typography>
-        }} />
-        <RichTextField label="Technical Description" source="technicalDescription" />
+        
+        <TextField source="description" className={classes.inlineField}/>
+        <RichTextField label="Technical Description" source="technicalDescription" className={classes.inlineField}/>
       </SimpleShowLayout>
     </Show>
   );

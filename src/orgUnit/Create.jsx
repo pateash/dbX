@@ -6,7 +6,7 @@ import {
 } from 'react-admin';
 
 export const OrgUnitCreate = props => (
-    <Create {...props}>
+    <Create title="Create Organization Unit" {...props}>
         <SimpleForm>
             <TextInput source="name" />
         </SimpleForm>

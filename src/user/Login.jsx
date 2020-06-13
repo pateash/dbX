@@ -62,7 +62,7 @@ const Login = () => {
 
       console.log('org unit', orgUnits);
 
-      setOrgUnit(orgUnits[0].id)
+      setOrgUnit(orgUnits.length < 1 ? 0 : orgUnits[0].id);
       setOrgUnits(orgUnits);
       setLoading(false);
     }
@@ -150,11 +150,6 @@ const Login = () => {
         Sign In
       </Button>
       <Grid container>
-        <Grid item xs>
-          <Link href="#" variant="body2">
-            Forgot password?
-          </Link>
-        </Grid>
         <Grid item>
           <Link
             href=""

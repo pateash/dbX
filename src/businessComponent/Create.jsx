@@ -6,7 +6,7 @@ import {
 } from 'react-admin';
 
 export const BusinessComponentCreate = props => (
-    <Create {...props}>
+    <Create title="Create Business Component"{...props}>
         <SimpleForm>
             <TextInput source="name" />
         </SimpleForm>
