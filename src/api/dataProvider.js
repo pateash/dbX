@@ -51,21 +51,29 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
         break;
       }
       case GET_ONE:
-        url = `${apiUrl}/${resource}/${params.id??'1'}`;
+        url = `${apiUrl}/${resource}/${params.id ?? '1'}`;
         options.method = "GET";
         break;
-      case GET_MANY: {
-        const query = {
-          filter: JSON.stringify({ id: params.ids })
-        };
-        let idStr = "";
-        const queryString = params.ids.map(id => idStr + `id=${id}`);
-        url = `${apiUrl}/${resource}?${idStr}}`;
-        break;
-      }
+      /*  case GET_MANY: {
+         const query = {
+           filter: JSON.stringify({ id: params.ids })
+         };
+         let idStr = "";
+         const queryString = params.ids.map(id => idStr + `id=${id}`);
+         url = `${apiUrl}/${resource}?${idStr}}`;
+         break;
+       } */
       case GET_MANY_REFERENCE: {
-        const { page, perPage } = params.pagination;
-        url = `${apiUrl}/${resource}?page=${page}&pageSize=${perPage}`;
+        console.log(params);
+        const { filter, pagination, sort, id } = params;
+        const { page, perPage } = pagination ?? { page: '1', perPage: '' };
+        const { field, order } = sort ?? {};
+        var sortStr = '';
+        if (field && field !== null) {
+          sortStr = `&sort=${field}&order=${order}`;
+        }
+        // if (resource === 'user' || resource === 'orgUnit') {
+        url = `${apiUrl}/${resource}/${id}?page=${page - 1}&pageSize=${perPage}&filter=${encodeURI(JSON.stringify(filter))}${sortStr !== '' ? sortStr : ''}`;
         break;
       }
       case UPDATE:
@@ -112,9 +120,11 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
           );
         }
 
+        console.log(resource, json[resource + 's']);;
+
         return {
           data: json[resource + 's'],
-          total: parseInt(json.totalElements, 10)
+          total: parseInt(json.totalElements, 10),
         };
       case CREATE:
         return { data: { ...params.data, id: json.id } };

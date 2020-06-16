@@ -199,8 +199,8 @@ const ExceptionTable = ({ selectedRow, ...props }) => {
               />
             </>
           }} />
-          {/*<DateField showTime label="Updated Time" source="updateTime" />*/}
-          {/*<TextField source="comment" />*/}
+          <DateField showTime label="Updated Time" source="updateTime" />
+          <TextField source="comment" />
           <EditButton />
         </Datagrid>
       </List>

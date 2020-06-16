@@ -97,6 +97,10 @@ const App = () => (
                 list={BusinessComponentList}
                 create={permissions === 'ROLE_ADMIN' ? null : BusinessComponentCreate}
             />,
+            <Resource
+                name="oldException"
+                key="oldExceptions"
+            />,
         ]}
     </Admin>
 );
