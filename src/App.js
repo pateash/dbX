@@ -47,6 +47,23 @@ const httpClient = (url, options = {}) => {
 
 ); */
 
+const Summary = () => {
+    const [data, setData] = React.useState({
+        lowCount: 1,
+        highCount: 4,
+        resolvedCount: 5,
+    });
+
+    return <div>
+        <h1>
+            Summary
+        </h1>
+        <p>{data.lowCount}</p>
+        <p>{data.highCount}</p>
+        <p>{data.resolvedCount}</p>
+    </div>;
+}
+
 const App = () => (
     <Admin title="dbX" loginPage={Login} logoutButton={Logout} authProvider={authProvider} dataProvider={dataProvider(config.apiUrl, httpClient)}>
         {permissions => [
@@ -100,6 +117,12 @@ const App = () => (
             <Resource
                 name="oldException"
                 key="oldExceptions"
+            />,
+            <Resource
+                name="summary"
+                key="summary"
+                list={Summary}
+                options={{ label: 'Summary' }}
             />,
         ]}
     </Admin>

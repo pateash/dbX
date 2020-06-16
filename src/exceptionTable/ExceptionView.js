@@ -448,7 +448,7 @@ const ExceptionView = ({ selectedRow, ...props }) => {
             <DialogContentText id="alert-dialog-description">
               <Grid container spacing={2} xs={12}>
                 <Grid item container xs={12} md={6}>
-                  <ExceptionRecord title="Latest Verison" {...latestCompare} />
+                  <ExceptionRecord title="Latest Version" {...latestCompare} />
                 </Grid>
                 <Grid item container xs={12} md={6}>
                   <ExceptionRecord title={`Version: ${recordCompare.version}`} {...latestCompare} {...recordCompare} />
