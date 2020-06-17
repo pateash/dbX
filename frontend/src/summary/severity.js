@@ -8,9 +8,9 @@ import ExceptionTable from "../exceptionTable/ExceptionTable";
 const graphicColor = ["red", "green", "#FDF200"]; // Colors
 //const wantedGraphicData = [{x: "High", y: 70 }, {x: "Medium", y: 50 }, {x: "Low", y: 40 }]; // Data that we want to display
 const defaultGraphicData = [
-  { x: "High", y: 0 },
-  { x: "Medium", y: 0 },
-  { x: "Low", y: 100 },
+  { x: "High", y: 120 },
+  { x: "Medium", y: 120 },
+  { x: "Low", y: 120 },
 ]; // Data used to make the animate prop work
 
 function SeverityPie({

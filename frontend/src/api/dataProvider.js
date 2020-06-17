@@ -37,8 +37,8 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
       case GET_LIST: {
         console.log(params);
         const { filter, pagination, sort } = params;
-        const { page, perPage } = pagination;
-        const { field, order } = sort;
+        const { page, perPage } = pagination ?? { page: 1, perPage: '' };
+        const { field, order } = sort ?? {};
         var sortStr = '';
         if (field && field !== null) {
           sortStr = `&sort=${field}&order=${order}`;

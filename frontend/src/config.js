@@ -1,5 +1,7 @@
-// const serverBaseUrl = 'http://localhost:8080';
-const serverBaseUrl = 'http://dbx-dbx.192.168.42.23.nip.io';
+const localServerBaseUrl = 'http://localhost:8080';
+const openShiftServerBaseUrl = 'http://dbx-dbx.192.168.42.23.nip.io';
+
+const serverBaseUrl = process.env.NODE_ENV === "development" ? localServerBaseUrl : openShiftServerBaseUrl;
 
 var config = {
     apiUrl: `${serverBaseUrl}/api`,
