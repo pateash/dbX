@@ -118,7 +118,7 @@ const GridField = ({ label, child }) => {
 
 const GridTextField = ({ label, value }) => {
   const child = <>
-    {value.split("\n").map(v => (
+    {(value ?? ' ' + "\n").split("\n").map(v => (
       <Typography component="p" variant="body1">{v}</Typography>
     ))}
   </>
@@ -204,11 +204,11 @@ const ExceptionRecordVersions = ({ id }) => {
                 <ExpansionPanelSummary
                   expandIcon={<ExpandMoreIcon />}
                 >
-                  <Typography className={classes.heading}>See Techincal Description</Typography>
+                  <Typography className={classes.heading}>See Technical Description</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                   <Typography>
-                    {technicalDescription.split("\n").map(v => (
+                    {technicalDescription ?? ' ' + "\n".split("\n").map(v => (
                       <Typography component="p" variant="body1">{v}</Typography>
                     ))}
                   </Typography>
@@ -245,7 +245,7 @@ const ExceptionRecord = ({ title, category, source, severity, status, businessCo
     <GridDateField label="Time Generated" date={timeGenerated} />
     <GridDateField label="Time Updated" date={updateTime} />
     <GridTextField label="Comment" value={comment} />
-    <GridTextField label="Techincal Description" value={technicalDescription} />
+    <GridTextField label="Technical Description" value={technicalDescription} />
   </Grid>
 }
 
@@ -354,7 +354,25 @@ const ExceptionView = ({ selectedRow, ...props }) => {
         <TextField label="Business Component" source="businessComponent.name" className={classes.inlineField} />
         <TextField source="description" className={classes.inlineField} />
         <TextField source="comment" />
-        <TextField multiline label="Technical Description" source="technicalDescription" />
+        {/* <TextField multiline label="Technical Description" source="technicalDescription" /> */}
+        <FunctionField label="Technical Description" render={({ technicalDescription }) => {
+          return <>
+            <ExpansionPanel>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+              >
+                <Typography className={classes.heading}>See</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Typography>
+                  {(technicalDescription ?? ' ' + "\n").split("\n").map(v => (
+                    <Typography component="p" variant="body1">{v}</Typography>
+                  ))}
+                </Typography>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          </>
+        }} />
 
         <ReferenceManyField /* pagination={<Pagination />} */ label="Versions" reference="oldException" target="exceptionId">
           <Datagrid>
@@ -418,6 +436,26 @@ const ExceptionView = ({ selectedRow, ...props }) => {
             }} />
 
             <TextField sortable={false} label="Business Component" source="businessComponent.name" />
+
+            <FunctionField label="Technical Description" render={({ technicalDescription }) => {
+              return <>
+                <ExpansionPanel>
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                  >
+                    <Typography className={classes.heading}>See</Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Typography>
+                      {(technicalDescription ?? ' ' + "\n").split("\n").map(v => (
+                        <Typography component="p" variant="body1">{v}</Typography>
+                      ))}
+                    </Typography>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              </>
+            }} />
+
             <TextField sortable={false} label="Technical Description" source="technicalDescription" />
             <DateField sortable={false} showTime label="Updated Time" source="updateTime" />
             <TextField sortable={false} source="comment" />
