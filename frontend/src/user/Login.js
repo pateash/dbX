@@ -1,19 +1,19 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { useLogin, useNotify, Notification, Loading } from 'react-admin';
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { useLogin, useNotify, Notification, Loading } from "react-admin";
 // import { ThemeProvider } from '@material-ui/styles';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
-import config from '../config';
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import { InputLabel, MenuItem, FormControl, Select } from "@material-ui/core";
+import config from "../config";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,7 +36,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const doRegister = async ({ username, password, name, orgUnit }) => {
-  console.log("register", JSON.stringify({ username, password, name, orgUnit: Number(orgUnit) }));
+  console.log(
+    "register",
+    JSON.stringify({ username, password, name, orgUnit: Number(orgUnit) })
+  );
   const request = new Request(config.registerUrl, {
     method: "POST",
     body: JSON.stringify({ username, password, name, orgUnit }),
@@ -44,7 +47,9 @@ const doRegister = async ({ username, password, name, orgUnit }) => {
   });
   const response = await fetch(request);
   if (response.status < 200 || response.status >= 300) {
-    throw new Error(response.statusText);
+    const text = await response.text();
+    console.log(text);
+    throw { error: JSON.parse(text), status: response.status };
   }
 
   Promise.resolve();
@@ -60,7 +65,7 @@ const Login = () => {
       const res = await response.json();
       const orgUnits = res;
 
-      console.log('org unit', orgUnits);
+      console.log("org unit", orgUnits);
 
       setOrgUnit(orgUnits.length < 1 ? 0 : orgUnits[0].id);
       setOrgUnits(orgUnits);
@@ -71,26 +76,26 @@ const Login = () => {
   const [loading, setLoading] = useState(true);
   const [orgUnits, setOrgUnits] = useState([]);
   const [isLogin, setIsLogin] = useState(true);
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [orgUnit, setOrgUnit] = useState(0);
   const doLogin = useLogin();
   const notify = useNotify();
   const submit = (e) => {
     e.preventDefault();
-    doLogin({ username, password })
-      .catch(({ error, status }) => {
-        var msg = '';
-        if (status === 400 || status === 401) {
-          msg = 'Invalid Password';
-        } else {
-          msg = error.message;
-        }
-        console.log('login err', error);
-        console.log(msg);
-        notify(msg);
-      });
+    doLogin({ username, password }).catch(({ error, status }) => {
+      var msg = "";
+      if (status === 400 || status === 401) {
+        msg = "Invalid Username or Password";
+      } else {
+        msg = error.message;
+      }
+      console.log("login err", error);
+      console.log(msg);
+      console.log(status);
+      notify(msg);
+    });
   };
 
   const submitRegister = (e) => {
@@ -105,7 +110,21 @@ const Login = () => {
         setPassword("");
         notify("Registration successful");
       })
-      .catch(() => notify("Username already taken"));
+      //.catch(() => notify("Username already taken"));
+      .catch(({ error, status }) => {
+        var msg = "";
+        if (status === 400 || status === 401) {
+          msg = "Fields cannot be blank. Minimum password length : 6";
+          //msg = error.message;
+        } else {
+          msg = error.message;
+        }
+
+        console.log("login err", error);
+        console.log(msg);
+        console.log(status);
+        notify(msg);
+      });
   };
 
   const classes = useStyles();
@@ -172,50 +191,61 @@ const Login = () => {
     return <Loading />;
   }
 
-  const register = (<form className={classes.form} onSubmit={submitRegister} noValidate>
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <TextField
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          variant="outlined"
-          required
-          fullWidth
-          id="username"
-          label="User Name"
-          name="username"
-          autoComplete="username"
-          autoFocus
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          value={name}
-          onChange={e => setName(e.target.value)}
-          autoComplete="name"
-          name="name"
-          variant="outlined"
-          required
-          fullWidth
-          id="name"
-          label="Name"
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <FormControl fullWidth variant="outlined" className={classes.formControl}>
-          <InputLabel id="demo-simple-select-outlined-label">Org. Unit</InputLabel>
-          <Select
-            id="org_unit"
-            value={orgUnit}
-            onChange={(e) => setOrgUnit(Number(e.target.value))}
-            label="Organization Unit"
+  const register = (
+    <form className={classes.form} onSubmit={submitRegister} noValidate>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <TextField
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            variant="outlined"
+            required
+            fullWidth
+            id="username"
+            label="User Name"
+            name="username"
+            autoComplete="username"
+            autoFocus
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            autoComplete="name"
+            name="name"
+            variant="outlined"
+            required
+            fullWidth
+            id="name"
+            label="Name"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <FormControl
+            fullWidth
+            variant="outlined"
+            className={classes.formControl}
           >
-            {orgUnits.map((unit, idx) => {
-              return <MenuItem value={unit.id}>{idx+1}. {unit.name}</MenuItem>
-            })}
-          </Select>
-        </FormControl>
-        {/* <TextField
+            <InputLabel id="demo-simple-select-outlined-label">
+              Org. Unit
+            </InputLabel>
+            <Select
+              id="org_unit"
+              value={orgUnit}
+              onChange={(e) => setOrgUnit(Number(e.target.value))}
+              label="Organization Unit"
+            >
+              {orgUnits.map((unit, idx) => {
+                return (
+                  <MenuItem value={unit.id}>
+                    {idx + 1}. {unit.name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          {/* <TextField
                     value={orgUnit}
                     onChange={e => setOrgUnit(e.target.value)}
                     variant="outlined"
@@ -226,48 +256,51 @@ const Login = () => {
                     name="org_unit"
                     autoComplete="org_unit"
                 /> */}
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            variant="outlined"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+          />
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <TextField
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          variant="outlined"
-          required
-          fullWidth
-          name="password"
-          label="Password"
-          type="password"
-          id="password"
-          autoComplete="current-password"
-        />
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        className={classes.submit}
+      >
+        Sign Up
+      </Button>
+      <Grid container justify="flex-end">
+        <Grid item>
+          <Link
+            href=""
+            onClick={(e) => {
+              e.preventDefault();
+              setIsLogin(true);
+              setName("");
+              setUsername("");
+              setPassword("");
+              setOrgUnit("");
+            }}
+            variant="text"
+          >
+            Already have an account? Log in
+          </Link>
+          <Link href="#" variant="body2"></Link>
+        </Grid>
       </Grid>
-    </Grid>
-    <Button
-      type="submit"
-      fullWidth
-      variant="contained"
-      color="primary"
-      className={classes.submit}
-    >
-      Sign Up
-    </Button>
-    <Grid container justify="flex-end">
-      <Grid item>
-        <Link href="" onClick={(e) => {
-          e.preventDefault();
-          setIsLogin(true);
-          setName('');
-          setUsername('');
-          setPassword('');
-          setOrgUnit('');
-        }} variant="text">
-          Already have an account? Log in
-                </Link>
-        <Link href="#" variant="body2">
-        </Link>
-      </Grid>
-    </Grid>
-  </form>
+    </form>
   );
 
   return (
