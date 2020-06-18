@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { VictoryPie, VictoryBar, VictoryStack, VictoryAxis, VictoryLabel } from "victory";
+import {
+  VictoryPie,
+  VictoryBar,
+  VictoryStack,
+  VictoryAxis,
+  VictoryLabel,
+} from "victory";
 import { Card, Container } from "@material-ui/core";
 import { Avatar, makeStyles, useTheme, Chip, Button } from "@material-ui/core";
 import { green, red, yellow } from "@material-ui/core/colors";
@@ -44,17 +50,23 @@ function getData(dayWiseSeverityCountWrapper) {
       }
     });
 
-    lowArray.push({ y: low, x: index + 1, day });
-    mediumArray.push({ y: medium, x: index + 1, day });
-    highArray.push({ y: high, x: index + 1, day });
+    lowArray.push({ y: low, x: 7 - index, day });
+    mediumArray.push({ y: medium, x: 7 - index, day });
+    highArray.push({ y: high, x: 7 - index, day });
   }
+  //console.log(lowArray);
+  lowArray.reverse();
+  //console.log(lowArray);
+  mediumArray.reverse();
+  highArray.reverse();
 
   return { highArray, lowArray, mediumArray, days, maxCount };
 }
 
 function ExceptionStack({ dayWiseSeverityCountWrapper }) {
-  const { highArray, lowArray, mediumArray, days, maxCount } = getData(dayWiseSeverityCountWrapper);
-
+  const { highArray, lowArray, mediumArray, days, maxCount } = getData(
+    dayWiseSeverityCountWrapper
+  );
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -90,36 +102,34 @@ function ExceptionStack({ dayWiseSeverityCountWrapper }) {
 
   return (
     <Container maxWidth="xs" className={classes.containerStyle}>
-      <VictoryStack height={600} width={700} colorScale={["green", "yellow", "red"]}>
-        <VictoryBar
-          data={lowArray}
-        />
-        <VictoryBar
-          data={mediumArray}
-        />
-        <VictoryBar
-          data={highArray}
-        />
+      <VictoryStack
+        height={600}
+        width={700}
+        colorScale={["green", "yellow", "red"]}
+      >
+        <VictoryBar data={lowArray} />
+        <VictoryBar data={mediumArray} />
+        <VictoryBar data={highArray} />
         <VictoryAxis
           scale="time"
           standalone={false}
           // tickLabelComponent={<VictoryLabel dy={20} />}
           // domain={{ x: [1, 2, 3, 4, 5, 6, 7] }}
-          tickValues={days}
-          tickFormat={
-            (x) => {
-              const d = new Date(days[x - 1])
-              return `${d.getDate()}/${d.getMonth() + 1}`
-            }
-          }
+          tickValues={days.reverse()}
+          //tickValues={days}
+          tickFormat={(x) => {
+            const d = new Date(days[x - 1]);
+            return `${d.getDate()}/${d.getMonth() + 1}`;
+          }}
         />
-        <VictoryAxis dependentAxis
+        <VictoryAxis
+          dependentAxis
           domain={[0, maxCount > 3 ? maxCount : 4]}
           offsetX={50}
           orientation="left"
           standalone={false}
 
-        // style={styles.axisOne}
+          // style={styles.axisOne}
         />
         {/* <VictoryAxis dependentAxis crossAxis height={500} range={{ y: [0, maxCount+20] }} /> */}
         {/* <VictoryBar
