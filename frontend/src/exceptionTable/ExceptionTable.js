@@ -73,7 +73,7 @@ function useLocalStorage(key, initialValue) {
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
-  const setValue = value => {
+  const setValue = (value) => {
     try {
       // Allow value to be a function so we have same API as useState
       const valueToStore =
@@ -91,9 +91,8 @@ function useLocalStorage(key, initialValue) {
   return [storedValue, setValue];
 }
 
-
 const ExceptionTable = ({ selectedRow, ...props }) => {
-  const [refresh, setRefresh] = useLocalStorage('autoRefresh', false);
+  const [refresh, setRefresh] = useLocalStorage("autoRefresh", false);
   // const [refresh, setRefresh] = useState(true);
   const classes = useListStyles();
   const doRefresh = useRefresh();
@@ -103,7 +102,7 @@ const ExceptionTable = ({ selectedRow, ...props }) => {
     return cancelTimer; */
     const timer = setInterval(() => {
       if (refresh) {
-        console.log('Refresh Data');
+        console.log("Refresh Data");
         doRefresh();
       }
     }, 3000);
@@ -114,18 +113,21 @@ const ExceptionTable = ({ selectedRow, ...props }) => {
 
   return (
     <div>
-      <Button onClick={() => {
-        /* if (!refresh) {
+      <Button
+        onClick={() => {
+          /* if (!refresh) {
           refreshData(1);
         } else {
           cancelTimer();
         } */
-        setRefresh(!refresh);
-      }} color="primary" variant="outlined">{refresh ? "STOP" : "START"} AUTO REFRESH</Button>
-      <List
-        {...props}
-        filters={<ExceptionFilter />}
+          setRefresh(!refresh);
+        }}
+        color="primary"
+        variant="outlined"
       >
+        {refresh ? "STOP" : "START"} AUTO REFRESH
+      </Button>
+      <List {...props} filters={<ExceptionFilter />} bulkActionButtons={false}>
         <Datagrid
           rowClick="show"
           classes={{
@@ -140,65 +142,90 @@ const ExceptionTable = ({ selectedRow, ...props }) => {
           <TextField source="source" />
           <TextField source="category" />
           <TextField source="description" />
-          <FunctionField label="Severity" source="severity" sortBy="severity" render={record => {
-            var avatarClass;
-            var chipColor;
-            const severity = record.severity.toLowerCase();
-            switch (severity) {
-              case "severity_high":
-                avatarClass = classes.redCircle;
-                chipColor = red[500];
-                break;
-              case "severity_medium":
-                avatarClass = classes.yellowCircle;
-                chipColor = yellow[500];
-                break;
-              case "severity_low":
-                avatarClass = classes.greenCircle;
-                chipColor = green[500];
-                break;
-            }
+          <FunctionField
+            label="Severity"
+            source="severity"
+            sortBy="severity"
+            render={(record) => {
+              var avatarClass;
+              var chipColor;
+              const severity = record.severity.toLowerCase();
+              switch (severity) {
+                case "severity_high":
+                  avatarClass = classes.redCircle;
+                  chipColor = red[500];
+                  break;
+                case "severity_medium":
+                  avatarClass = classes.yellowCircle;
+                  chipColor = yellow[500];
+                  break;
+                case "severity_low":
+                  avatarClass = classes.greenCircle;
+                  chipColor = green[500];
+                  break;
+              }
 
-            return <>
-              <Chip
-                variant="outlined"
-                avatar={<Avatar className={avatarClass} variant="circle"> </Avatar>}
-                label={severity.split("_")[1].toUpperCase()}
-                style={{
-                  color: chipColor,
-                }}
-              />
-            </>
-          }} />
-          <TextField label="Business Component" source="businessComponent.name" />
+              return (
+                <>
+                  <Chip
+                    variant="outlined"
+                    avatar={
+                      <Avatar className={avatarClass} variant="circle">
+                        {" "}
+                      </Avatar>
+                    }
+                    label={severity.split("_")[1].toUpperCase()}
+                    style={{
+                      color: chipColor,
+                    }}
+                  />
+                </>
+              );
+            }}
+          />
+          <TextField
+            label="Business Component"
+            source="businessComponent.name"
+          />
           {/*<TextField label="Org. Unit" source="orgUnit.name" />*/}
           {/*<RichTextField label="Technical Description" source="technicalDescription" />*/}
-          <FunctionField label="Status" source="status" sortBy="status" render={record => {
-            var avatarClass;
-            var chipColor;
-            const status = record.status.toLowerCase();
-            switch (status) {
-              case "status_unresolved":
-                avatarClass = classes.redCircle;
-                chipColor = red[500];
-                break;
-              case "status_resolved":
-                avatarClass = classes.greenCircle;
-                chipColor = green[500];
-                break;
-            }
+          <FunctionField
+            label="Status"
+            source="status"
+            sortBy="status"
+            render={(record) => {
+              var avatarClass;
+              var chipColor;
+              const status = record.status.toLowerCase();
+              switch (status) {
+                case "status_unresolved":
+                  avatarClass = classes.redCircle;
+                  chipColor = red[500];
+                  break;
+                case "status_resolved":
+                  avatarClass = classes.greenCircle;
+                  chipColor = green[500];
+                  break;
+              }
 
-            return <>
-              <Chip
-                variant="outlined"
-                avatar={<Avatar className={avatarClass} variant="circle"> </Avatar>}
-                label={status.split("_")[1].toUpperCase()}
-                style={{
-                  color: chipColor,
-                }}
-              />
-            </>
-          }} />
+              return (
+                <>
+                  <Chip
+                    variant="outlined"
+                    avatar={
+                      <Avatar className={avatarClass} variant="circle">
+                        {" "}
+                      </Avatar>
+                    }
+                    label={status.split("_")[1].toUpperCase()}
+                    style={{
+                      color: chipColor,
+                    }}
+                  />
+                </>
+              );
+            }}
+          />
           <DateField showTime label="Updated Time" source="updateTime" />
           <TextField source="comment" />
           <EditButton />
