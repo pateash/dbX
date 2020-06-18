@@ -59,6 +59,7 @@ function getData(dayWiseSeverityCountWrapper) {
   //console.log(lowArray);
   mediumArray.reverse();
   highArray.reverse();
+  days.reverse();
 
   return { highArray, lowArray, mediumArray, days, maxCount };
 }
@@ -115,8 +116,8 @@ function ExceptionStack({ dayWiseSeverityCountWrapper }) {
           standalone={false}
           // tickLabelComponent={<VictoryLabel dy={20} />}
           // domain={{ x: [1, 2, 3, 4, 5, 6, 7] }}
-          tickValues={days.reverse()}
-          //tickValues={days}
+          //tickValues={days.reverse()}
+          tickValues={days}
           tickFormat={(x) => {
             const d = new Date(days[x - 1]);
             return `${d.getDate()}/${d.getMonth() + 1}`;
