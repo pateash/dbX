@@ -146,13 +146,16 @@ const App = () => (
         create={permissions === "ROLE_ADMIN" ? null : BusinessComponentCreate}
       />,
       <Resource name="oldException" key="oldExceptions" />,
-      <Resource
-        name="summary"
-        key="summary"
-        list={Summary}
-        options={{ label: "Summary" }}
-        icon={AssessmentIcon}
-      />,
+
+      permissions === "ROLE_USER" ? (
+        <Resource
+          name="summary"
+          key="summary"
+          list={Summary}
+          options={{ label: "Summary" }}
+          icon={AssessmentIcon}
+        />
+      ) : null,
     ]}
   </Admin>
 );
