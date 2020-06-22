@@ -5,7 +5,7 @@ import { Avatar, makeStyles, useTheme, Chip, Button } from "@material-ui/core";
 import { green, red, yellow } from "@material-ui/core/colors";
 import ExceptionTable from "../exceptionTable/ExceptionTable";
 
-const graphicColor = ["red", "green", "#FDF200"]; // Colors
+const graphicColor = ["red", "#FDF200", "green"]; // Colors
 //const wantedGraphicData = [{x: "High", y: 70 }, {x: "Medium", y: 50 }, {x: "Low", y: 40 }]; // Data that we want to display
 const defaultGraphicData = [
   { x: "High", y: 120 },

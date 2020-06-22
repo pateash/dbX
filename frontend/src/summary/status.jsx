@@ -36,8 +36,8 @@ function StatusPie({ totalResolvedExceptions, totalUnresolvedExceptions }) {
 
   useEffect(() => {
     setGraphicData([
-      { x: "Unresolved", y: totalResolvedExceptions },
-      { x: "Resolved", y: totalUnresolvedExceptions },
+      { x: "Unresolved", y: totalUnresolvedExceptions },
+      { x: "Resolved", y: totalResolvedExceptions },
     ]); // Setting the data that we want to display
   }, []);
 
