@@ -250,23 +250,23 @@ Link - [http://dbx-dbx.apps.123.252.203.195.nip.io/swagger-ui.html](http://dbx-d
 
 ## 12. Estimation and Time Planning
 
-| No. | Component | Description | API | UI |
+| No. | Component | Description | UI | API |
 |:--- |:---:| ---:| --- | --- |
-| 1. | Auth | User authentication and authorization | 2 | 8 |
-| 2. | Org Unit | Org Unit creation and listing | 2 | 3 |
-| 3. | Business Component | Business Component creation, approval and listing | 2 | 3 |
-| 4. | User | User registration, log and approval | 8 | 16 |
+| 1. | Auth | User authentication and authorization | 3 | 6 |
+| 2. | Org Unit | Org Unit creation and listing | 3 | 3 |
+| 3. | Business Component | Business Component creation, approval and listing | 3 | 3 |
+| 4. | User | User registration, log and approval | 11 | 13 |
 | 5. | Accept Exceptions | Accept Incoming Exception generated | - | 8 |
-| 6. | Validate Exception | Validating incoming exception and ensuring correctness | - | 16 |
-| 7. | Find Exceptions | Finding Exceptions for the user | 4 | 8 |
-| 8.  | Rejected Exceptions Approval | Rechecking rejected exceptions for approval | 2 | 8 |
-| 9. | Exception Filtering | Filtering desired exceptions | 3 | 12 |
-| 10. | Summary | Summary of the Exceptions | 4 | 2 |
+| 6. | Validate Exception | Validating incoming exception and ensuring correctness | - | 14 |
+| 7. | Find Exceptions | Finding Exceptions for the user | 5 | 8 |
+| 8.  | Rejected Exceptions Approval | Rechecking rejected exceptions for approval | 3 | 5 |
+| 9. | Exception Filtering | Filtering desired exceptions | 5 | 12 |
+| 10. | Summary | Summary of the Exceptions | 3 | 2 |
 | 11. | Unit Tests | Unit Testing | - | 24 |
 | 12. | Miscellaneous | Miscellaneous | 2 | 2 |
 | 13. | Deployment Pipeline | Creating Deployment Pipeline and Deploying the application | 3 | 2 |
-| 14. | Documentation | Documentation of API and UI Guide | 3 | 3 |
-|  |  | Total | 35 | 115 |
+| 14. | Documentation | Documentation of API and UI Guide | 4 | 3 |
+|  |  | Total | 45 | 105 |
 
 **Cost** - $10 * 150 = $1500
 
