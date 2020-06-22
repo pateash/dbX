@@ -15,7 +15,7 @@ To achieve this Layered Architecture is Implemented.
 All the components are Decoupled Isolated Components/Layers.
 
 1. Business Logic (BL) - 
-This Layer is responsible for handling all the Busies Logic for the application. All of the logic is implemented in this Layer.
+This Layer is responsible for handling all the Business Logic for the application. All of the logic is implemented in this Layer.
 2. Database (DB)
 This Layer is responsible for persisting and finding the Data for Business Logic Layer.
 3. API - 
